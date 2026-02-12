@@ -7,6 +7,7 @@ function SearchHub() {
     const [engines, setEngines] = useState([]);
     const [isAdding, setIsAdding] = useState(false);
     const [isDeleteMode, setIsDeleteMode] = useState(false);
+    const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
     const [selectedForDeletion, setSelectedForDeletion] = useState([]);
     const [newSite, setNewSite] = useState({ name: '', url: '', icon: '' });
 
@@ -100,18 +101,21 @@ function SearchHub() {
 
     const deleteSelected = () => {
         if (selectedForDeletion.length === 0) return;
-        if (confirm(`Delete ${selectedForDeletion.length} selected site(s)?`)) {
-            const newEngines = engines.filter(eng => !selectedForDeletion.includes(eng.id));
-            saveEngines(newEngines);
-            setSelectedForDeletion([]);
-            setIsDeleteMode(false);
-        }
+        setIsConfirmingDelete(true);
+    };
+
+    const confirmDelete = () => {
+        const newEngines = engines.filter(eng => !selectedForDeletion.includes(eng.id));
+        saveEngines(newEngines);
+        setSelectedForDeletion([]);
+        setIsConfirmingDelete(false);
+        setIsDeleteMode(false);
     };
 
     return (
         <div className="app-container animate-fade-in">
             <header className="header">
-                <h1>Multi-Search</h1>
+                <h1>Multi Search Tabs</h1>
                 <p>Search everywhere, all at once.</p>
             </header>
 
@@ -175,6 +179,21 @@ function SearchHub() {
                                     <button type="submit" className="btn-search">Add Engine</button>
                                 </div>
                             </form>
+                        </div>
+                    </div>
+                )}
+
+                {isConfirmingDelete && (
+                    <div className="modal-overlay">
+                        <div className="glass-card modal-content animate-fade-in">
+                            <h3 style={{ color: 'var(--danger)' }}>Delete Selected Sites?</h3>
+                            <p style={{ color: 'var(--text-muted)' }}>
+                                Are you sure you want to delete {selectedForDeletion.length} selected site(s)? This action cannot be undone.
+                            </p>
+                            <div className="modal-actions">
+                                <button type="button" className="btn-secondary" onClick={() => setIsConfirmingDelete(false)}>Cancel</button>
+                                <button type="button" className="btn-search delete-btn-active" onClick={confirmDelete}>Delete Sites</button>
+                            </div>
                         </div>
                     </div>
                 )}
