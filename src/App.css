@@ -16,6 +16,7 @@
   font-weight: 800;
   background: linear-gradient(to right, var(--text-main), var(--accent));
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 8px;
 }
@@ -121,4 +122,106 @@
 .btn-secondary:hover {
   background: rgba(255, 255, 255, 0.1);
   color: var(--text-main);
+}
+
+.site-item.delete-mode {
+  opacity: 0.8;
+  border: 1px dashed var(--glass-border);
+  cursor: pointer;
+}
+
+.site-item.delete-mode:hover {
+  opacity: 1;
+  border-color: var(--danger);
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.site-item.selecting-delete {
+  border-color: var(--danger) !important;
+  background: rgba(239, 68, 68, 0.1) !important;
+  opacity: 1 !important;
+}
+
+.site-item.selecting-delete .site-toggle {
+  background: var(--danger) !important;
+  border-color: var(--danger) !important;
+}
+
+.delete-btn-active {
+  background: var(--danger) !important;
+}
+
+.delete-btn-active:hover {
+  background: #dc2626 !important;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.4) !important;
+}
+
+.delete-btn-active:disabled {
+  background: rgba(239, 68, 68, 0.3) !important;
+  cursor: not-allowed;
+  box-shadow: none !important;
+}
+
+.add-btn {
+  border: 2px dashed var(--glass-border);
+  background: transparent;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.add-btn:hover {
+  opacity: 1;
+  border-color: var(--primary);
+  background: rgba(100, 108, 255, 0.05);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.modal-content {
+  width: 90%;
+  max-width: 450px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.hint {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.hint code {
+  color: var(--accent);
+  background: rgba(56, 189, 248, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
 }

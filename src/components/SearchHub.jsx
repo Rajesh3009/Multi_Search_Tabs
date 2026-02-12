@@ -6,6 +6,8 @@ function SearchHub() {
     const [query, setQuery] = useState('');
     const [engines, setEngines] = useState([]);
     const [isAdding, setIsAdding] = useState(false);
+    const [isDeleteMode, setIsDeleteMode] = useState(false);
+    const [selectedForDeletion, setSelectedForDeletion] = useState([]);
     const [newSite, setNewSite] = useState({ name: '', url: '', icon: '' });
 
     useEffect(() => {
@@ -23,6 +25,12 @@ function SearchHub() {
     };
 
     const toggleEngine = (id) => {
+        if (isDeleteMode) {
+            setSelectedForDeletion(prev =>
+                prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+            );
+            return;
+        }
         const newEngines = engines.map(eng =>
             eng.id === id ? { ...eng, enabled: !eng.enabled } : eng
         );
@@ -90,10 +98,13 @@ function SearchHub() {
         setIsAdding(false);
     };
 
-    const removeSite = (id, e) => {
-        e.stopPropagation();
-        if (confirm('Remove this search engine?')) {
-            saveEngines(engines.filter(eng => eng.id !== id));
+    const deleteSelected = () => {
+        if (selectedForDeletion.length === 0) return;
+        if (confirm(`Delete ${selectedForDeletion.length} selected site(s)?`)) {
+            const newEngines = engines.filter(eng => !selectedForDeletion.includes(eng.id));
+            saveEngines(newEngines);
+            setSelectedForDeletion([]);
+            setIsDeleteMode(false);
         }
     };
 
@@ -120,23 +131,20 @@ function SearchHub() {
                     {engines.map(engine => (
                         <div
                             key={engine.id}
-                            className={`glass-card site-item ${engine.enabled ? 'enabled' : ''}`}
+                            className={`glass-card site-item ${engine.enabled ? 'enabled' : ''} ${isDeleteMode && selectedForDeletion.includes(engine.id) ? 'selecting-delete' : ''} ${isDeleteMode ? 'delete-mode' : ''}`}
                             onClick={() => toggleEngine(engine.id)}
                         >
-                            <button
-                                className="btn-remove"
-                                onClick={(e) => removeSite(engine.id, e)}
-                                title="Remove site"
-                            >×</button>
                             <div className="site-toggle"></div>
                             <img src={engine.icon} alt="" className="site-icon" />
                             <span className="site-name">{engine.name}</span>
                         </div>
                     ))}
-                    <div className="glass-card site-item add-btn" onClick={() => setIsAdding(true)}>
-                        <span style={{ fontSize: '2rem', marginBottom: '4px' }}>+</span>
-                        <span className="site-name">Add Site</span>
-                    </div>
+                    {!isDeleteMode && (
+                        <div className="glass-card site-item add-btn" onClick={() => setIsAdding(true)}>
+                            <span style={{ fontSize: '2rem', marginBottom: '4px' }}>+</span>
+                            <span className="site-name">Add Site</span>
+                        </div>
+                    )}
                 </div>
 
                 {isAdding && (
@@ -172,11 +180,25 @@ function SearchHub() {
                 )}
 
                 <div className="actions-footer">
-                    <button className="btn-secondary" onClick={exportToJson}>Export JSON</button>
-                    <label className="btn-secondary" style={{ cursor: 'pointer' }}>
-                        Import JSON
-                        <input type="file" accept=".json" onChange={importFromJson} style={{ display: 'none' }} />
-                    </label>
+                    {!isDeleteMode ? (
+                        <>
+                            <button className="btn-secondary" onClick={() => setIsDeleteMode(true)}>Manage Sites</button>
+                            <button className="btn-secondary" onClick={exportToJson}>Export JSON</button>
+                            <label className="btn-secondary" style={{ cursor: 'pointer' }}>
+                                Import JSON
+                                <input type="file" accept=".json" onChange={importFromJson} style={{ display: 'none' }} />
+                            </label>
+                        </>
+                    ) : (
+                        <>
+                            <button className="btn-search delete-btn-active" onClick={deleteSelected} disabled={selectedForDeletion.length === 0}>
+                                Delete Selected ({selectedForDeletion.length})
+                            </button>
+                            <button className="btn-secondary" onClick={() => { setIsDeleteMode(false); setSelectedForDeletion([]); }}>
+                                Cancel
+                            </button>
+                        </>
+                    )}
                 </div>
             </main>
         </div>
