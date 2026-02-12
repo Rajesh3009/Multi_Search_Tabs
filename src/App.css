@@ -1,0 +1,124 @@
+.app-container {
+  width: 100%;
+  max-width: 800px;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.header {
+  text-align: center;
+}
+
+.header h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(to right, var(--text-main), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+
+.header p {
+  color: var(--text-muted);
+}
+
+.search-section {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.search-input-group {
+  display: flex;
+  gap: 12px;
+}
+
+.search-input-group input {
+  flex: 1;
+  font-size: 1.1rem;
+}
+
+.btn-search {
+  background: var(--primary);
+  color: white;
+  padding: 0 32px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.btn-search:hover {
+  background: var(--primary-hover);
+  box-shadow: 0 0 20px rgba(100, 108, 255, 0.4);
+}
+
+.site-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 16px;
+}
+
+.site-item {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  opacity: 0.6;
+}
+
+.site-item.enabled {
+  opacity: 1;
+  border-color: var(--accent);
+  background: rgba(56, 189, 248, 0.05);
+}
+
+.site-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+}
+
+.site-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.site-toggle {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--glass-border);
+}
+
+.site-item.enabled .site-toggle {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.actions-footer {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  color: var(--text-muted);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+}
