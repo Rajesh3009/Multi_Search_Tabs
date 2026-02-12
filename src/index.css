@@ -8,7 +8,7 @@
   --text-muted: #94a3b8;
   --accent: #38bdf8;
   --danger: #ef4444;
-  
+
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   color-scheme: dark;
 }
@@ -17,6 +17,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -65,8 +66,15 @@ input:focus {
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fade-in {
