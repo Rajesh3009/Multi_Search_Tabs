@@ -1,5 +1,5 @@
 {
-    "name": "web-search-tabs",
+    "name": "multi-search-tabs",
     "compatibility_date": "2026-02-12",
     "assets": {
         "directory": "./dist"
