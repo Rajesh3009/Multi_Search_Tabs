@@ -129,7 +129,27 @@
 .actions-footer {
   display: flex;
   justify-content: center;
-  gap: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.export-area {
+  width: 100%;
+  height: 120px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  color: var(--text-main);
+  padding: 12px;
+  font-family: monospace;
+  font-size: 0.85rem;
+  resize: none;
+  word-break: break-all;
+  outline: none;
+}
+
+.export-area:focus {
+  border-color: var(--primary);
 }
 
 .btn-secondary {

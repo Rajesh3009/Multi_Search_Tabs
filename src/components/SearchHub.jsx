@@ -9,9 +9,13 @@ function SearchHub() {
     const [isEditing, setIsEditing] = useState(false);
     const [isDeleteMode, setIsDeleteMode] = useState(false);
     const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+    const [isExportString, setIsExportString] = useState(false);
+    const [isImportString, setIsImportString] = useState(false);
     const [selectedForDeletion, setSelectedForDeletion] = useState([]);
     const [newSite, setNewSite] = useState({ name: '', url: '', icon: '' });
     const [editingSite, setEditingSite] = useState(null);
+    const [importInput, setImportInput] = useState('');
+    const [exportString, setExportString] = useState('');
 
     useEffect(() => {
         const savedEngines = localStorage.getItem('search_engines');
@@ -133,6 +137,34 @@ function SearchHub() {
         setIsDeleteMode(false);
     };
 
+    const handleExportString = () => {
+        const str = btoa(unescape(encodeURIComponent(JSON.stringify(engines))));
+        setExportString(str);
+        setIsExportString(true);
+    };
+
+    const handleImportString = (e) => {
+        e.preventDefault();
+        try {
+            const decoded = decodeURIComponent(escape(atob(importInput.trim())));
+            const importedEngines = JSON.parse(decoded);
+            if (Array.isArray(importedEngines)) {
+                saveEngines(importedEngines);
+                setIsImportString(false);
+                setImportInput('');
+            } else {
+                throw new Error();
+            }
+        } catch (err) {
+            alert('Invalid configuration string!');
+        }
+    };
+
+    const copyToClipboard = () => {
+        navigator.clipboard.writeText(exportString);
+        alert('Copied to clipboard!');
+    };
+
     return (
         <div className="app-container animate-fade-in">
             <header className="header">
@@ -244,6 +276,44 @@ function SearchHub() {
                     </div>
                 )}
 
+                {isExportString && (
+                    <div className="modal-overlay">
+                        <div className="glass-card modal-content animate-fade-in">
+                            <h3>Export Configuration String</h3>
+                            <p className="hint">Copy this string to share or backup your sites.</p>
+                            <textarea
+                                className="export-area"
+                                readOnly
+                                value={exportString}
+                                onClick={(e) => e.target.select()}
+                            />
+                            <div className="modal-actions">
+                                <button type="button" className="btn-secondary" onClick={() => setIsExportString(false)}>Close</button>
+                                <button type="button" className="btn-search" onClick={copyToClipboard}>Copy String</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {isImportString && (
+                    <div className="modal-overlay">
+                        <div className="glass-card modal-content animate-fade-in">
+                            <h3>Import Configuration String</h3>
+                            <p className="hint">Paste your configuration string below.</p>
+                            <textarea
+                                className="export-area"
+                                placeholder="Paste string here..."
+                                value={importInput}
+                                onChange={(e) => setImportInput(e.target.value)}
+                            />
+                            <div className="modal-actions">
+                                <button type="button" className="btn-secondary" onClick={() => { setIsImportString(false); setImportInput(''); }}>Cancel</button>
+                                <button type="button" className="btn-search" onClick={handleImportString}>Import Now</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {isConfirmingDelete && (
                     <div className="modal-overlay">
                         <div className="glass-card modal-content animate-fade-in">
@@ -268,6 +338,8 @@ function SearchHub() {
                                 Import JSON
                                 <input type="file" accept=".json" onChange={importFromJson} style={{ display: 'none' }} />
                             </label>
+                            <button className="btn-secondary" onClick={handleExportString}>Export String</button>
+                            <button className="btn-secondary" onClick={() => setIsImportString(true)}>Import String</button>
                         </>
                     ) : (
                         <>
