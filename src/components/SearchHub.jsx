@@ -16,6 +16,9 @@ function SearchHub() {
     const [editingSite, setEditingSite] = useState(null);
     const [importInput, setImportInput] = useState('');
     const [exportString, setExportString] = useState('');
+    const [delay, setDelay] = useState(0);
+
+    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
     useEffect(() => {
         const savedEngines = localStorage.getItem('search_engines');
@@ -44,7 +47,7 @@ function SearchHub() {
         saveEngines(newEngines);
     };
 
-    const handleSearch = (e) => {
+    const handleSearch = async (e) => {
         e.preventDefault();
         if (!query.trim()) return;
 
@@ -54,10 +57,15 @@ function SearchHub() {
             return;
         }
 
-        activeEngines.forEach(eng => {
+        for (let i = 0; i < activeEngines.length; i++) {
+            const eng = activeEngines[i];
             const searchUrl = eng.url.replace('%s', encodeURIComponent(query));
             window.open(searchUrl, '_blank');
-        });
+
+            if (delay > 0 && i < activeEngines.length - 1) {
+                await sleep(delay * 1000);
+            }
+        }
     };
 
     const exportToJson = () => {
@@ -174,13 +182,27 @@ function SearchHub() {
 
             <main className="glass-card search-section">
                 <form onSubmit={handleSearch} className="search-input-group">
-                    <input
-                        type="text"
-                        placeholder="What are you looking for?"
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                        autoFocus
-                    />
+                    <div className="search-bar-row">
+                        <input
+                            type="text"
+                            placeholder="What are you looking for?"
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
+                            autoFocus
+                        />
+                        <div className="delay-setting">
+                            <label htmlFor="delay-input">Delay (s):</label>
+                            <input
+                                id="delay-input"
+                                type="number"
+                                min="0"
+                                max="60"
+                                step="0.5"
+                                value={delay}
+                                onChange={(e) => setDelay(parseFloat(e.target.value) || 0)}
+                            />
+                        </div>
+                    </div>
                     <button type="submit" className="btn-search">Search</button>
                 </form>
 
